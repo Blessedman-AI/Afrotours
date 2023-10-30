@@ -37,7 +37,7 @@ const tourSchema = new mongoose.Schema(
       default: 4.5,
       min: [1, 'Rating must be equal to or more than 1.0'],
       max: [5, 'Rating must be equal to or less than 5.0'],
-      set: val => Math.round(val * 10) / 10
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -84,50 +84,43 @@ const tourSchema = new mongoose.Schema(
       default: false,
     },
 
-    startLocation:{
+    startLocation: {
       //GeoJSON
-      type:{
+      type: {
         type: String,
-        default: "Point",
-        enum: ["Point"]
+        default: 'Point',
+        enum: ['Point'],
       },
       coordinates: [Number],
       address: String,
-      description: String
-  
+      description: String,
     },
 
-    locations:[
+    locations: [
       {
         type: {
-          type:String,
-          default: "Point",
-          enum: ["Point"]
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
         },
-          coordinates: [Number],
-          address: String,
-          description: String,
-          day: Number,
-      }
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
     ],
 
-    guides: [
-      {type: mongoose.Schema.ObjectId,
-      ref: "User"
-      }
-    ]
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },
-
-
 );
 
-tourSchema.index({price: 1, ratingsAverage: -1})
-tourSchema.index({slug: 1})
-tourSchema.index({startLocation: "2dsphere"})
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 //Virtual Properties v23
 tourSchema.virtual('durationWeeks').get(function () {
@@ -135,11 +128,11 @@ tourSchema.virtual('durationWeeks').get(function () {
 });
 
 //virtual populate
-tourSchema.virtual("reviews", {
-  ref: "Review",
-  foreignField: "tour",
-  localField: "_id"
-})
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
 
 //DOCUMENT MIDDLEWARE: Only runs before .save() and .create() and not for .update()v24
 tourSchema.pre('save', function (next) {
@@ -163,23 +156,21 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-
-tourSchema.pre(/^find/, function(next){
+tourSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "guides",
-    select: "-__v -passwordChangedAt"
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
   });
-  
-  next()
-})
-
-tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-  // console.log(docs);
 
   next();
 });
 
+// tourSchema.post(/^find/, function (docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+//   // console.log(docs);
+
+//   next();
+// });
 
 //AGGREGATION MIDDLEWARE
 

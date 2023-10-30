@@ -4,7 +4,7 @@ import { displayMap } from './mapbox.js';
 import { updateSettings } from './updateSettings.js';
 import { bookTour } from './stripe';
 
-console.log('Hello from Parcel');
+// console.log('Hello from Parcel');
 
 //DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -39,7 +39,7 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
+    // console.log(form);
 
     updateSettings(form, 'data');
   });
